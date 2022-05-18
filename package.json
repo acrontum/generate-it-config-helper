@@ -4,7 +4,8 @@
   "description": "openapi-nodegen-config-helper",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "npm run test"
   },
   "repository": {
     "type": "git",
