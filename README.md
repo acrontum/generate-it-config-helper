@@ -20,19 +20,24 @@ import ConfigHelper from 'openapi-nodegen-config-helper';
 ConfigHelper.required('JWT_SECRET')
 ```
 
+## withDefault adds a new process.env 
+
 ## Example
 ```typescript
 import dotenv from 'dotenv';
 import ConfigHelper from 'openapi-nodegen-config-helper';
+import someHelper from './helpers/someHelper';
 
 dotenv.config();
 
-/* tslint:disable */
 export default {
   // Swagger file
   swaggerFile: ConfigHelper.withDefault('SWAGGER_FILE', 'latest'),
   jwtSecret: ConfigHelper.required('JWT_SECRET'),
-}
-/* tslint:enable */
 
+  port: ConfigHelper.withDefault('PORT', 666),
+  
+  somethingElse: someHelper(process.env.CONFIG_HELPER_PORT), // CONFIG_HELPER_PORT is injected into the process.env and can be accessed this way 
+  somethingOther: someHelper(process.env.CONFIG_HELPER_JWT_SECRET), // CONFIG_HELPER_JWT_SECRET is injected into the process.env and can be accessed this way 
+}
 ```

@@ -4,34 +4,38 @@ const self = {
    */
   returnValue: (value) => {
     if (value === 'true') {
-      return true
+      return true;
     }
     if (value === 'false') {
-      return false
+      return false;
     }
     if (!isNaN(value)) {
-      return Number(value)
+      return Number(value);
     }
     if (value === 'undefined') {
-      return undefined
+      return undefined;
     }
     if (value === 'null') {
-      return null
+      return null;
     }
     if (typeof value === 'string') {
       try {
-        return JSON.parse(/^(TRUE|FALSE)$/.test(value)? value.toLocaleLowerCase(): value)
+        return JSON.parse(/^(TRUE|FALSE)$/.test(value) ? value.toLocaleLowerCase() : value);
       } catch (e) {
         if (value === '\'false\'' || value === '"false"') {
-          return 'false'
+          return 'false';
         }
         if (value === '\'true\'' || value === '"true"') {
-          return 'true'
+          return 'true';
         }
-        return value
+        return value;
       }
     }
-    return value
+    return value;
+  },
+
+  setConfigHelperProcEnv (environmentVariable, value) {
+    process.env['CONFIG_HELPER_' + environmentVariable] = value;
   },
 
   /**
@@ -40,7 +44,7 @@ const self = {
    * @returns {string | number | boolean}
    */
   required: (environmentVariable) => {
-    const value = process.env[environmentVariable]
+    const value = process.env[environmentVariable];
     if (!value) {
       console.error(`
 Required environment variable ${environmentVariable} is not defined.
@@ -48,10 +52,11 @@ Required environment variable ${environmentVariable} is not defined.
 During development, you can configure all environment variables by
 placing an .env file into the project root, with lines of the form
 VARIABE=VALUE. You can use the provived .env-example as a template.
-`)
-      process.exit(1)
+`);
+      process.exit(1);
     }
-    return self.returnValue(value)
+    self.setConfigHelperProcEnv(environmentVariable, value);
+    return self.returnValue(value);
   },
 
   /**
@@ -61,8 +66,10 @@ VARIABE=VALUE. You can use the provived .env-example as a template.
    * @returns {string | any | *}
    */
   withDefault: (environmentVariable, defaultValue) => {
-    return process.env[environmentVariable] ? self.returnValue(process.env[environmentVariable]):defaultValue
+    const value = process.env[environmentVariable] ? self.returnValue(process.env[environmentVariable]) : defaultValue;
+    self.setConfigHelperProcEnv(environmentVariable, value);
+    return value;
   }
-}
+};
 
-module.exports = self
+module.exports = self;
