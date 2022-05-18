@@ -4,9 +4,12 @@ test('Should return the string provided', () => {
   expect(index.withDefault('UNITTESTVALUE', 'HELLO')).toBe('HELLO');
 });
 
-test('with default should also set the process.env to the default', () => {
-  index.withDefault('UNITTESTVALUE', 'HELLO');
-  expect(process.env.CONFIG_HELPER_UNITTESTVALUE).toBe('HELLO');
+test('withDefault and required should also set the process.env CONFIG_HELPER_<name>', () => {
+  index.withDefault('UNITTESTVALUE1', 'HELLO');
+  process.env.UNITTESTVALUE2 = 'HELLO'
+  index.required('UNITTESTVALUE2');
+  expect(process.env.CONFIG_HELPER_UNITTESTVALUE1).toBe('HELLO');
+  expect(process.env.CONFIG_HELPER_UNITTESTVALUE2).toBe('HELLO');
 });
 
 test('Should return the string provided', () => {

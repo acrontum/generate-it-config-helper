@@ -38,5 +38,6 @@ export default {
   port: ConfigHelper.withDefault('PORT', 666),
   
   somethingElse: someHelper(process.env.CONFIG_HELPER_PORT), // CONFIG_HELPER_PORT is injected into the process.env and can be accessed this way 
+  somethingOther: someHelper(process.env.CONFIG_HELPER_JWT_SECRET), // CONFIG_HELPER_JWT_SECRET is injected into the process.env and can be accessed this way 
 }
 ```

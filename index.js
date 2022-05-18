@@ -34,6 +34,10 @@ const self = {
     return value;
   },
 
+  setConfigHelperProcEnv (environmentVariable, value) {
+    process.env['CONFIG_HELPER_' + environmentVariable] = value;
+  },
+
   /**
    * Ensures that the given string representation of the envVar exists.
    * @param environmentVariable
@@ -51,6 +55,7 @@ VARIABE=VALUE. You can use the provived .env-example as a template.
 `);
       process.exit(1);
     }
+    self.setConfigHelperProcEnv(environmentVariable, value);
     return self.returnValue(value);
   },
 
@@ -61,11 +66,9 @@ VARIABE=VALUE. You can use the provived .env-example as a template.
    * @returns {string | any | *}
    */
   withDefault: (environmentVariable, defaultValue) => {
-    process.env['CONFIG_HELPER_' + environmentVariable] = process.env[environmentVariable] || defaultValue;
-    if (process.env[environmentVariable]) {
-      return self.returnValue(process.env[environmentVariable]);
-    }
-    return defaultValue;
+    const value = process.env[environmentVariable] ? self.returnValue(process.env[environmentVariable]) : defaultValue;
+    self.setConfigHelperProcEnv(environmentVariable, value);
+    return value;
   }
 };
 
